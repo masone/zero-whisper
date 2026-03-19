@@ -1,0 +1,9 @@
+# Core STT - Apple Silicon optimized Parakeet
+parakeet-mlx
+
+# LLM rewriting - Apple Silicon optimized
+mlx-lm
+
+# Audio utilities
+numpy
+soundfile

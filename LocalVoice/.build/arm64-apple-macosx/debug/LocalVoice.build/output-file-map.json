@@ -1,0 +1,68 @@
+{
+  "": {
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/master.swiftdeps"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/AppState.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AppState.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AppState.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AppState~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AppState.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AppState.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/AudioRecorder.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AudioRecorder.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AudioRecorder.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AudioRecorder~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AudioRecorder.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/AudioRecorder.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/HelperClient.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HelperClient.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HelperClient.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HelperClient~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HelperClient.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HelperClient.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/HotkeyManager.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HotkeyManager.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HotkeyManager.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HotkeyManager~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HotkeyManager.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/HotkeyManager.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/LocalVoiceApp.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/LocalVoiceApp.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/LocalVoiceApp.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/LocalVoiceApp~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/LocalVoiceApp.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/LocalVoiceApp.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/MenuBarView.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/MenuBarView.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/MenuBarView.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/MenuBarView~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/MenuBarView.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/MenuBarView.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/PasteManager.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PasteManager.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PasteManager.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PasteManager~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PasteManager.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PasteManager.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/PermissionsManager.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PermissionsManager.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PermissionsManager.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PermissionsManager~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PermissionsManager.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/PermissionsManager.dia"
+  },
+  "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/LocalVoice/SettingsView.swift": {
+    "dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/SettingsView.d",
+    "object": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/SettingsView.swift.o",
+    "swiftmodule": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/SettingsView.swiftdeps",
+    "diagnostics": "/Volumes/My Shared Files/Projects/mywhisper/LocalVoice/.build/arm64-apple-macosx/debug/LocalVoice.build/SettingsView.dia"
+  }
+}
