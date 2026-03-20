@@ -127,7 +127,7 @@ class HelperClient {
         if let existing = serverProcess, existing.isRunning { return }
 
         guard FileManager.default.fileExists(atPath: pythonPath) else {
-            print("[HelperClient] Python venv not found at \(pythonPath). Run setup_helper.sh first.")
+            print("[HelperClient] Python venv not found at \(pythonPath). Run setup.sh first.")
             return
         }
 
@@ -188,7 +188,7 @@ class HelperClient {
 
         var errorDescription: String? {
             switch self {
-            case .serverNotRunning: return "Helper server not running. Check that setup_helper.sh was run."
+            case .serverNotRunning: return "Helper server not running. Check that setup.sh was run."
             case .invalidJSON: return "Helper returned invalid JSON"
             case .helperError(let msg): return msg
             case .httpError(let msg): return "HTTP error: \(msg)"

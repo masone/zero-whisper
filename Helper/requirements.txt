@@ -6,4 +6,3 @@ mlx-lm
 
 # Audio utilities
 numpy
-soundfile

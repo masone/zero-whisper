@@ -100,10 +100,9 @@ def preload_models():
     """Pre-load Parakeet model so first request is fast."""
     print("[helper] Pre-loading Parakeet model...", file=sys.stderr)
     try:
-        from stt import _parakeet_transcribe, _model_cache, _STUB_MODE
+        from stt import _model_cache, _STUB_MODE, _MODEL_NAME
         if not _STUB_MODE:
             from parakeet_mlx import from_pretrained
-            from stt import _MODEL_NAME
             if "model" not in _model_cache:
                 _model_cache["model"] = from_pretrained(_MODEL_NAME)
                 print("[helper] Parakeet model loaded.", file=sys.stderr)

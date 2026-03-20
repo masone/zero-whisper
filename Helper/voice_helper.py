@@ -44,7 +44,7 @@ def main():
             output_result(mode="dictate", transcript=transcript, output_text=transcript)
 
     except ImportError as e:
-        output_error(f"Missing dependency: {e}. Run setup_helper.sh to install.")
+        output_error(f"Missing dependency: {e}. Run setup.sh to install.")
     except Exception as e:
         output_error(str(e))
 

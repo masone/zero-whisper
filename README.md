@@ -71,4 +71,4 @@ Swift app (menubar)          HTTP            Python server (localhost:8426)
 - **Hotkey not working**: Check Accessibility permission in System Settings
 - **No audio**: Check Microphone permission
 - **Slow first use**: Models are downloading. Subsequent uses are fast.
-- **Helper not starting**: Run `./Scripts/setup_helper.sh` first
+- **Helper not starting**: Run `./Scripts/setup.sh` first
