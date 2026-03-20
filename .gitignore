@@ -10,6 +10,9 @@ Helper/**/__pycache__/
 # Test artifacts
 Helper/test.wav
 
+# Build output
+build/
+
 # Xcode / SwiftPM
 ZeroWhisper/.swiftpm/
 ZeroWhisper/.build/

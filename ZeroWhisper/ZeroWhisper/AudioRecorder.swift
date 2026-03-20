@@ -18,8 +18,8 @@ class AudioRecorder {
             throw RecorderError.noMicrophone
         }
 
-        // Create temp file for output WAV
-        let tempDir = FileManager.default.temporaryDirectory
+        // Use /tmp so the Python helper server can access the file
+        let tempDir = URL(fileURLWithPath: "/tmp")
         let fileName = "zerowhisper_\(Int(Date().timeIntervalSince1970)).wav"
         let fileURL = tempDir.appendingPathComponent(fileName)
 

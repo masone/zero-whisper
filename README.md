@@ -22,24 +22,24 @@ Free, local-only, push-to-talk speech-to-text for macOS. Zero cloud. Zero cost. 
 
 ## Setup
 
-### 1. Set up the Python helper
-
 ```bash
-./Scripts/setup_helper.sh
+git clone <repo-url> && cd mywhisper
+./Scripts/setup.sh
 ```
 
-Creates a Python venv and installs dependencies. Models download automatically on first use (~600MB for Parakeet, ~3GB for Qwen).
+That's it. Builds the app, installs Python dependencies, and outputs `build/ZeroWhisper.app`.
 
-### 2. Build and run
+Then:
+```bash
+open build/ZeroWhisper.app
+```
 
-Open `ZeroWhisper/Package.swift` in Xcode, select the ZeroWhisper scheme and My Mac, then Cmd+R.
+Or copy to Applications:
+```bash
+cp -r build/ZeroWhisper.app /Applications/
+```
 
-The app appears as a mic icon in your menubar and auto-starts the helper server.
-
-### 3. Grant permissions
-
-- **Microphone**: Grant when prompted
-- **Accessibility**: System Settings > Privacy & Security > Accessibility > toggle ZeroWhisper on
+On first launch, grant **Microphone** (prompted automatically) and **Accessibility** (System Settings > Privacy & Security > Accessibility > toggle ZeroWhisper on). Models download on first use (~4GB, one time).
 
 ## Usage
 
