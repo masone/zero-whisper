@@ -23,8 +23,8 @@ class AudioRecorder {
         let fileName = "localvoice_\(Int(Date().timeIntervalSince1970)).wav"
         let fileURL = tempDir.appendingPathComponent(fileName)
 
-        // Target format: 16kHz mono PCM
-        guard let outputFormat = AVAudioFormat(
+        // Use float32 for the converter output (AVAudioConverter works best with float)
+        guard let converterFormat = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
             sampleRate: targetSampleRate,
             channels: targetChannels,
@@ -33,16 +33,20 @@ class AudioRecorder {
             throw RecorderError.formatError
         }
 
-        // Create output file
-        let file = try AVAudioFile(
-            forWriting: fileURL,
-            settings: outputFormat.settings,
-            commonFormat: .pcmFormatFloat32,
-            interleaved: false
-        )
+        // Write as 16-bit PCM WAV (standard format, compatible with Python wave module)
+        let wavSettings: [String: Any] = [
+            AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: targetSampleRate,
+            AVNumberOfChannelsKey: 1,
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsFloatKey: false,
+            AVLinearPCMIsBigEndianKey: false,
+        ]
+
+        let file = try AVAudioFile(forWriting: fileURL, settings: wavSettings)
 
         // Create converter from input format to target format
-        guard let converter = AVAudioConverter(from: inputFormat, to: outputFormat) else {
+        guard let converter = AVAudioConverter(from: inputFormat, to: converterFormat) else {
             throw RecorderError.formatError
         }
 
@@ -51,9 +55,9 @@ class AudioRecorder {
         inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: inputFormat) { buffer, _ in
 
             // Calculate output buffer size based on sample rate ratio
-            let ratio = outputFormat.sampleRate / inputFormat.sampleRate
-            let outputFrameCount = AVAudioFrameCount(Double(buffer.frameLength) * ratio)
-            guard let outputBuffer = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: outputFrameCount) else { return }
+            let ratio = converterFormat.sampleRate / inputFormat.sampleRate
+            let outputFrameCount = max(AVAudioFrameCount(Double(buffer.frameLength) * ratio), 1)
+            guard let outputBuffer = AVAudioPCMBuffer(pcmFormat: converterFormat, frameCapacity: outputFrameCount) else { return }
 
             var error: NSError?
             let status = converter.convert(to: outputBuffer, error: &error) { _, outStatus in
@@ -63,6 +67,7 @@ class AudioRecorder {
 
             if status == .haveData, outputBuffer.frameLength > 0 {
                 do {
+                    // AVAudioFile handles float32→int16 conversion on write
                     try file.write(from: outputBuffer)
                 } catch {
                     print("Write error: \(error)")

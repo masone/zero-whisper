@@ -1,4 +1,5 @@
 import SwiftUI
+import Cocoa
 
 struct MenuBarView: View {
     @ObservedObject var appState: AppState
@@ -31,14 +32,23 @@ struct MenuBarView: View {
             // Last result
             if !appState.lastOutput.isEmpty {
                 Divider()
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text("Last result:")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                     Text(appState.lastOutput)
                         .font(.caption)
-                        .lineLimit(3)
+                        .lineLimit(5)
                         .textSelection(.enabled)
+                    Button("Copy to Clipboard") {
+                        NSPasteboard.general.declareTypes([.string], owner: nil)
+                        NSPasteboard.general.setString(appState.lastOutput, forType: .string)
+                    }
+                    .font(.caption)
+
+                    Text("Tip: text is always on your clipboard after transcription")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 12)
             }
@@ -67,13 +77,6 @@ struct MenuBarView: View {
             }
 
             Divider()
-
-            // Settings & Quit
-            Button("Settings…") {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-            }
-            .keyboardShortcut(",")
-            .padding(.horizontal, 12)
 
             Button("Quit LocalVoice") {
                 NSApplication.shared.terminate(nil)

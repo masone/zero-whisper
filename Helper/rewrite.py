@@ -4,6 +4,7 @@ Falls back to a stub for testing if mlx-lm is not installed.
 """
 
 import os
+import sys
 
 _STUB_MODE = os.environ.get("LOCALVOICE_STUB", "0") == "1"
 
@@ -35,7 +36,7 @@ def polish(text: str) -> str:
     try:
         return _mlx_polish(text)
     except ImportError:
-        print("[rewrite] mlx-lm not installed, using stub mode", file=__import__('sys').stderr)
+        print("[rewrite] mlx-lm not installed, using stub mode", file=sys.stderr)
         return _stub_polish(text)
 
 

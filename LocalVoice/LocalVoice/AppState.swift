@@ -60,15 +60,43 @@ class AppState: ObservableObject {
     let audioRecorder = AudioRecorder()
     let helperClient = HelperClient()
     let pasteManager = PasteManager()
+    private let hotkeyManager = HotkeyManager()
+    private let overlay = RecordingOverlay()
 
     private var resetTask: Task<Void, Never>?
+
+    init() {
+        setupHotkeys()
+        helperClient.ensureServerRunning()
+    }
+
+    private func setupHotkeys() {
+        hotkeyManager.onKeyDown = { [weak self] mode in
+            Task { @MainActor [weak self] in
+                self?.startRecording(mode: mode)
+            }
+        }
+
+        hotkeyManager.onKeyUp = { [weak self] in
+            Task { @MainActor [weak self] in
+                self?.stopRecording()
+            }
+        }
+
+        hotkeyManager.start()
+    }
 
     func startRecording(mode: Mode) {
         guard !state.isBusy else { return }
 
+        // Cancel any lingering success/error reset and hide old pill
+        resetTask?.cancel()
+        overlay.hide()
+
         do {
             try audioRecorder.startRecording()
             state = .recording(mode: mode)
+            overlay.show(state: state)
             NSSound.beep()
         } catch {
             handleError("Mic error: \(error.localizedDescription)")
@@ -93,6 +121,7 @@ class AppState: ObservableObject {
         }
 
         state = .transcribing
+        overlay.show(state: state)
 
         Task {
             await processAudio(wavURL: wavURL, mode: mode)
@@ -100,6 +129,10 @@ class AppState: ObservableObject {
     }
 
     private func processAudio(wavURL: URL, mode: Mode) async {
+        defer {
+            try? FileManager.default.removeItem(at: wavURL)
+        }
+
         do {
             let result = try await helperClient.transcribe(wavURL: wavURL, mode: mode)
 
@@ -108,16 +141,14 @@ class AppState: ObservableObject {
 
             if mode == .polish && state == .transcribing {
                 state = .rewriting
-                // Helper already did the rewriting, so we just move on
+                overlay.show(state: state)
             }
 
             state = .inserting
+            overlay.show(state: state)
             pasteManager.paste(result.outputText)
 
-            handleSuccess("Done")
-
-            // Clean up temp file
-            try? FileManager.default.removeItem(at: wavURL)
+            handleSuccess("Done — text on clipboard")
         } catch {
             // If we have any partial transcript, put it on clipboard
             if !lastTranscript.isEmpty {
@@ -129,11 +160,13 @@ class AppState: ObservableObject {
 
     private func handleSuccess(_ message: String) {
         state = .success(message)
+        overlay.show(state: state)
         scheduleReset()
     }
 
     func handleError(_ message: String) {
         state = .error(message)
+        overlay.show(state: state)
         scheduleReset()
     }
 
@@ -143,6 +176,7 @@ class AppState: ObservableObject {
             try? await Task.sleep(nanoseconds: 2_000_000_000)
             if !Task.isCancelled {
                 state = .idle
+                overlay.hide()
             }
         }
     }

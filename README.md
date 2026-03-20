@@ -9,39 +9,35 @@ A local-only macOS menubar app for push-to-talk speech-to-text. Hold a key to sp
 - **Polish mode**: Transcript cleaned up by Qwen LLM (Right Option + Shift)
 - **Local only**: No cloud services, all processing on-device
 - **Menubar app**: Lives in the menubar, no dock icon
+- **Clipboard safe**: Transcript always stays on your clipboard
 
 ## Requirements
 
 - macOS 13+ (Ventura or later)
-- Apple Silicon Mac (M1/M2/M3/M4) recommended for MLX acceleration
+- Apple Silicon Mac (M1/M2/M3/M4)
 - Xcode (for building the Swift app)
-- Python 3.10–3.12 (for the ML helper)
+- Python 3.10+ (for the ML helper)
 
 ## Setup
 
-### 1. Build the Swift app
-
-Open `LocalVoice/LocalVoice.xcodeproj` in Xcode, then Build & Run (Cmd+R).
-
-The app will appear in your menubar.
-
-### 2. Set up the Python helper
+### 1. Set up the Python helper
 
 ```bash
 ./Scripts/setup_helper.sh
 ```
 
-This creates a Python virtual environment in `Helper/venv/` and installs dependencies.
+This creates a Python venv in `Helper/venv/` and installs dependencies. Models download automatically on first use (~600MB for Parakeet, ~3GB for Qwen).
 
-First run with real models will download:
-- ~600MB for Parakeet STT model
-- ~3GB for Qwen 2.5 1.5B rewrite model
+### 2. Build and run the app
+
+Open `LocalVoice/Package.swift` in Xcode, select the LocalVoice scheme and My Mac, then Cmd+R.
+
+The app appears as a mic icon in your menubar. It auto-starts the helper server in the background.
 
 ### 3. Grant permissions
 
-On first use, the app will need:
-- **Microphone access**: Grant when prompted, or via System Settings > Privacy > Microphone
-- **Accessibility access**: Required for the global hotkey and paste simulation. Grant via System Settings > Privacy > Accessibility
+- **Microphone**: Grant when prompted
+- **Accessibility**: System Settings > Privacy & Security > Accessibility > toggle LocalVoice on
 
 ## Usage
 
@@ -50,32 +46,30 @@ On first use, the app will need:
 | Dictate (raw transcript) | Hold Right Option (⌥) |
 | Polish (cleaned up text) | Hold Right Option (⌥) + Shift (⇧) |
 
-1. Focus the app where you want text inserted (TextEdit, Notes, browser, etc.)
+1. Focus the app where you want text inserted
 2. Hold the hotkey
 3. Speak
 4. Release — text is transcribed and pasted
 
+The transcript is always on your clipboard. If the paste misses the target, just Cmd+V manually. You can also re-copy the last result from the menubar dropdown.
+
 ## Architecture
 
 ```
-LocalVoice/          Swift/SwiftUI menubar app
-  ├── AppState       State machine coordinator
-  ├── AudioRecorder  AVAudioEngine → 16kHz mono WAV
-  ├── HotkeyManager  NSEvent global monitor for Right Option
-  ├── HelperClient   Invokes Python helper, parses JSON
-  ├── PasteManager   Clipboard + CGEvent Cmd+V
-  └── MenuBarView    Menubar UI
-
-Helper/              Python ML helper
-  ├── voice_helper   CLI entry point
-  ├── stt            Parakeet-MLX transcription
-  └── rewrite        Qwen rewriting via mlx-lm
+Swift app (menubar)          HTTP            Python server (localhost:8426)
+┌──────────────────┐    POST /transcribe    ┌─────────────────────┐
+│ HotkeyManager    │ ─────────────────────> │ Parakeet STT        │
+│ AudioRecorder    │ <──────────────────── │ Qwen rewrite (opt)  │
+│ PasteManager     │       JSON response    │ Models stay warm    │
+└──────────────────┘                        └─────────────────────┘
 ```
+
+The app records mic audio to a temp 16-bit PCM WAV, sends the path to the helper server, and pastes the result via clipboard + simulated Cmd+V.
 
 ## Troubleshooting
 
 - **Hotkey not working**: Check Accessibility permission in System Settings
 - **No audio**: Check Microphone permission in System Settings
-- **Helper not found**: Check the helper path in Settings > General
-- **Slow first run**: Models are downloading (~4GB total). Subsequent runs are fast.
+- **Slow first use**: Models are downloading. Subsequent uses are fast.
+- **Helper not starting**: Make sure you ran `./Scripts/setup_helper.sh` first
 - **Stub mode**: Set `LOCALVOICE_STUB=1` env var to test without models

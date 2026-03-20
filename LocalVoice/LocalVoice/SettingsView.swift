@@ -4,45 +4,17 @@ struct SettingsView: View {
     @ObservedObject var appState: AppState
     @ObservedObject var permissions: PermissionsManager
 
-    @State private var helperPath: String = ""
-
     var body: some View {
         TabView {
-            generalTab
-                .tabItem { Label("General", systemImage: "gear") }
             permissionsTab
                 .tabItem { Label("Permissions", systemImage: "lock.shield") }
             debugTab
                 .tabItem { Label("Debug", systemImage: "ladybug") }
         }
-        .frame(width: 450, height: 320)
+        .frame(width: 450, height: 280)
         .onAppear {
-            helperPath = appState.helperClient.helperScriptPath
             permissions.checkAll()
         }
-    }
-
-    private var generalTab: some View {
-        Form {
-            Section("Hotkeys") {
-                Text("Hold Right Option (⌥) → Dictate")
-                Text("Hold Right Option (⌥) + Shift (⇧) → Polish")
-                Text("Hotkeys are fixed in v1.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            Section("Helper") {
-                TextField("Helper script path:", text: $helperPath)
-                    .onSubmit {
-                        appState.helperClient.helperScriptPath = helperPath
-                    }
-                Text("Python venv: \(appState.helperClient.pythonPath)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding()
     }
 
     private var permissionsTab: some View {

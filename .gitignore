@@ -1,0 +1,18 @@
+# Claude
+.claude
+
+# Python
+Helper/venv/
+Helper/__pycache__/
+Helper/**/__pycache__/
+*.pyc
+
+# Test artifacts
+Helper/test.wav
+
+# Xcode / SwiftPM
+LocalVoice/.swiftpm/
+LocalVoice/.build/
+LocalVoice/DerivedData/
+*.xcuserstate
+xcuserdata/
