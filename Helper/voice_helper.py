@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LocalVoice helper CLI.
+ZeroWhisper helper CLI.
 Accepts a WAV file and returns a JSON transcript via stdout.
 
 Usage:
@@ -15,7 +15,7 @@ import os
 
 
 def main():
-    parser = argparse.ArgumentParser(description="LocalVoice speech helper")
+    parser = argparse.ArgumentParser(description="ZeroWhisper speech helper")
     parser.add_argument("--input", required=True, help="Path to WAV file")
     parser.add_argument("--mode", choices=["dictate", "polish"], default="dictate",
                         help="Mode: dictate (STT only) or polish (STT + rewrite)")

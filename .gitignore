@@ -11,8 +11,8 @@ Helper/**/__pycache__/
 Helper/test.wav
 
 # Xcode / SwiftPM
-LocalVoice/.swiftpm/
-LocalVoice/.build/
-LocalVoice/DerivedData/
-*.xcuserstate
-xcuserdata/
+ZeroWhisper/.swiftpm/
+ZeroWhisper/.build/
+ZeroWhisper/build/
+ZeroWhisper/DerivedData/
+*.xcuser

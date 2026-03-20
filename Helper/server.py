@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LocalVoice helper — persistent HTTP server.
+ZeroWhisper helper — persistent HTTP server.
 Keeps Parakeet (and optionally Qwen) models warm in memory.
 
 Usage:
@@ -112,7 +112,7 @@ def preload_models():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="LocalVoice helper server")
+    parser = argparse.ArgumentParser(description="ZeroWhisper helper server")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--preload", action="store_true",
                         help="Pre-load models on startup")

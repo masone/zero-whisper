@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup script for LocalVoice Python helper.
+# Setup script for ZeroWhisper Python helper.
 # Creates a venv and installs dependencies.
 
 set -e
@@ -9,7 +9,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 HELPER_DIR="$PROJECT_DIR/Helper"
 VENV_DIR="$HELPER_DIR/venv"
 
-echo "=== LocalVoice Helper Setup ==="
+echo "=== ZeroWhisper Helper Setup ==="
 
 # Check Python version
 PYTHON=$(command -v python3 || true)

@@ -12,7 +12,7 @@ import wave
 import numpy as np
 
 # Flag to force stub mode for testing
-_STUB_MODE = os.environ.get("LOCALVOICE_STUB", "0") == "1"
+_STUB_MODE = os.environ.get("ZEROWHISPER_STUB", "0") == "1"
 
 # Cache the loaded model to avoid reloading on each call
 _model_cache = {}

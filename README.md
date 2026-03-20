@@ -1,13 +1,15 @@
-# LocalVoice
+# ZeroWhisper
 
-A local-only macOS menubar app for push-to-talk speech-to-text. Hold a key to speak, release to transcribe and paste.
+Free, local-only, push-to-talk speech-to-text for macOS. Zero cloud. Zero cost. Zero telemetry.
+
+> Unlike SuperWhisper et al, this costs zero. Runs fully locally. No API keys needed.
 
 ## Features
 
 - **Push-to-talk**: Hold Right Option to record, release to transcribe
 - **Dictate mode**: Raw transcript via Parakeet STT (Right Option)
 - **Polish mode**: Transcript cleaned up by Qwen LLM (Right Option + Shift)
-- **Local only**: No cloud services, all processing on-device
+- **100% local**: All processing on-device, nothing leaves your machine
 - **Menubar app**: Lives in the menubar, no dock icon
 - **Clipboard safe**: Transcript always stays on your clipboard
 
@@ -15,8 +17,8 @@ A local-only macOS menubar app for push-to-talk speech-to-text. Hold a key to sp
 
 - macOS 13+ (Ventura or later)
 - Apple Silicon Mac (M1/M2/M3/M4)
-- Xcode (for building the Swift app)
-- Python 3.10+ (for the ML helper)
+- Xcode (for building)
+- Python 3.10+
 
 ## Setup
 
@@ -26,18 +28,18 @@ A local-only macOS menubar app for push-to-talk speech-to-text. Hold a key to sp
 ./Scripts/setup_helper.sh
 ```
 
-This creates a Python venv in `Helper/venv/` and installs dependencies. Models download automatically on first use (~600MB for Parakeet, ~3GB for Qwen).
+Creates a Python venv and installs dependencies. Models download automatically on first use (~600MB for Parakeet, ~3GB for Qwen).
 
-### 2. Build and run the app
+### 2. Build and run
 
-Open `LocalVoice/Package.swift` in Xcode, select the LocalVoice scheme and My Mac, then Cmd+R.
+Open `ZeroWhisper/Package.swift` in Xcode, select the ZeroWhisper scheme and My Mac, then Cmd+R.
 
-The app appears as a mic icon in your menubar. It auto-starts the helper server in the background.
+The app appears as a mic icon in your menubar and auto-starts the helper server.
 
 ### 3. Grant permissions
 
 - **Microphone**: Grant when prompted
-- **Accessibility**: System Settings > Privacy & Security > Accessibility > toggle LocalVoice on
+- **Accessibility**: System Settings > Privacy & Security > Accessibility > toggle ZeroWhisper on
 
 ## Usage
 
@@ -51,7 +53,7 @@ The app appears as a mic icon in your menubar. It auto-starts the helper server 
 3. Speak
 4. Release — text is transcribed and pasted
 
-The transcript is always on your clipboard. If the paste misses the target, just Cmd+V manually. You can also re-copy the last result from the menubar dropdown.
+Text is always on your clipboard. If the paste misses, just Cmd+V manually.
 
 ## Architecture
 
@@ -59,17 +61,14 @@ The transcript is always on your clipboard. If the paste misses the target, just
 Swift app (menubar)          HTTP            Python server (localhost:8426)
 ┌──────────────────┐    POST /transcribe    ┌─────────────────────┐
 │ HotkeyManager    │ ─────────────────────> │ Parakeet STT        │
-│ AudioRecorder    │ <──────────────────── │ Qwen rewrite (opt)  │
+│ AudioRecorder    │ <───────────────────── │ Qwen rewrite (opt)  │
 │ PasteManager     │       JSON response    │ Models stay warm    │
 └──────────────────┘                        └─────────────────────┘
 ```
 
-The app records mic audio to a temp 16-bit PCM WAV, sends the path to the helper server, and pastes the result via clipboard + simulated Cmd+V.
-
 ## Troubleshooting
 
 - **Hotkey not working**: Check Accessibility permission in System Settings
-- **No audio**: Check Microphone permission in System Settings
+- **No audio**: Check Microphone permission
 - **Slow first use**: Models are downloading. Subsequent uses are fast.
-- **Helper not starting**: Make sure you ran `./Scripts/setup_helper.sh` first
-- **Stub mode**: Set `LOCALVOICE_STUB=1` env var to test without models
+- **Helper not starting**: Run `./Scripts/setup_helper.sh` first

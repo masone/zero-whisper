@@ -6,7 +6,7 @@ Falls back to a stub for testing if mlx-lm is not installed.
 import os
 import sys
 
-_STUB_MODE = os.environ.get("LOCALVOICE_STUB", "0") == "1"
+_STUB_MODE = os.environ.get("ZEROWHISPER_STUB", "0") == "1"
 
 # Model to use — Qwen2.5-1.5B-Instruct is small and fast on Apple Silicon
 _MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
