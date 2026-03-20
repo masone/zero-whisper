@@ -3,69 +3,50 @@ import SwiftUI
 
 /// A small floating pill that appears near the top of the screen during recording/processing.
 class RecordingOverlay {
-    private var window: NSWindow?
-    private var hostingView: NSHostingView<AnyView>?
+    private var window: NSPanel?
 
     func show(state: VoiceState) {
-        if window == nil {
-            createWindow()
-        }
+        DispatchQueue.main.async { [self] in
+            // Kill the old window entirely
+            window?.orderOut(nil)
+            window = nil
 
-        hostingView?.rootView = AnyView(OverlayPill(state: state))
+            // Create fresh window with current state
+            let pill = NSHostingView(rootView: OverlayPill(state: state))
+            pill.frame = NSRect(x: 0, y: 0, width: 300, height: 44)
 
-        // Auto-size window to fit content
-        if let hosting = hostingView {
-            let fittingSize = hosting.fittingSize
-            let width = min(max(fittingSize.width, 120), 500)
-            let height = min(max(fittingSize.height, 36), 100)
-            window?.setContentSize(NSSize(width: width, height: height))
-            hosting.frame = NSRect(origin: .zero, size: NSSize(width: width, height: height))
+            let win = NSPanel(
+                contentRect: NSRect(x: 0, y: 0, width: 300, height: 44),
+                styleMask: [.borderless, .nonactivatingPanel],
+                backing: .buffered,
+                defer: false
+            )
+            win.isOpaque = false
+            win.backgroundColor = .clear
+            win.hasShadow = false
+            win.level = .floating
+            win.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+            win.contentView = pill
+            win.isMovableByWindowBackground = false
+            win.ignoresMouseEvents = true
 
-            // Re-center horizontally
             if let screen = NSScreen.main {
                 let screenFrame = screen.visibleFrame
-                let x = screenFrame.midX - width / 2
+                let x = screenFrame.midX - 150
                 let y = screenFrame.maxY - 60
-                window?.setFrameOrigin(NSPoint(x: x, y: y))
+                win.setFrameOrigin(NSPoint(x: x, y: y))
             }
-        }
 
-        window?.orderFrontRegardless()
+            win.orderFrontRegardless()
+            self.window = win
+        }
     }
 
     func hide() {
-        window?.orderOut(nil)
-    }
-
-    private func createWindow() {
-        let pill = OverlayPill(state: .idle)
-        let hosting = NSHostingView(rootView: AnyView(pill))
-        hosting.frame = NSRect(x: 0, y: 0, width: 250, height: 44)
-
-        let win = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 250, height: 44),
-            styleMask: [.borderless, .nonactivatingPanel],
-            backing: .buffered,
-            defer: false
-        )
-        win.isOpaque = false
-        win.backgroundColor = .clear
-        win.hasShadow = true
-        win.level = .floating
-        win.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        win.contentView = hosting
-        win.isMovableByWindowBackground = true
-
-        // Position: top center of screen
-        if let screen = NSScreen.main {
-            let screenFrame = screen.visibleFrame
-            let x = screenFrame.midX - 125
-            let y = screenFrame.maxY - 60
-            win.setFrameOrigin(NSPoint(x: x, y: y))
+        DispatchQueue.main.async { [self] in
+            window?.orderOut(nil)
+            window = nil
         }
-
-        self.window = win
-        self.hostingView = hosting
     }
 }
 
@@ -77,18 +58,11 @@ private struct OverlayPill: View {
             Circle()
                 .fill(dotColor)
                 .frame(width: 10, height: 10)
-                .overlay(
-                    Circle()
-                        .fill(dotColor.opacity(0.5))
-                        .frame(width: 18, height: 18)
-                        .opacity(state.isRecording ? 1 : 0)
-                )
 
             Text(state.label)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white)
-                .lineLimit(3)
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(2)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -96,7 +70,7 @@ private struct OverlayPill: View {
             Capsule()
                 .fill(pillColor)
         )
-        .animation(.easeInOut(duration: 0.2), value: state)
+        .frame(width: 300, height: 44)
     }
 
     private var dotColor: Color {
