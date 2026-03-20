@@ -7,6 +7,10 @@ class PermissionsManager: ObservableObject {
 
     init() {
         checkAll()
+        // Prompt for accessibility on first launch if not granted
+        if !accessibilityGranted {
+            requestAccessibility()
+        }
     }
 
     func checkAll() {

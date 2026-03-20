@@ -6,8 +6,9 @@ class PasteManager {
     func paste(_ text: String) {
         copyToClipboard(text)
 
-        // Small delay to ensure clipboard is set before simulating paste
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+        // Delay to let clipboard settle and ensure the target app has focus
+        // (the overlay panel is non-activating, but give it time just in case)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.simulatePaste()
         }
     }
