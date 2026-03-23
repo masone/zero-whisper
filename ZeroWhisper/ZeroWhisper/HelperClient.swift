@@ -165,9 +165,7 @@ class HelperClient {
     private func findHelperDirectory() -> String {
         let candidates = [
             Bundle.main.bundlePath + "/../../../../Helper",
-            Bundle.main.executablePath.map { URL(fileURLWithPath: $0).deletingLastPathComponent().path + "/../../../../Helper" } ?? "",
-            NSHomeDirectory() + "/Projects/mywhisper/Helper",
-            "/Volumes/My Shared Files/Projects/mywhisper/Helper"
+            Bundle.main.executablePath.map { URL(fileURLWithPath: $0).deletingLastPathComponent().path + "/../../../../Helper" } ?? ""
         ]
 
         for candidate in candidates {
@@ -177,7 +175,7 @@ class HelperClient {
             }
         }
 
-        return "/Volumes/My Shared Files/Projects/mywhisper/Helper"
+        return (Bundle.main.bundlePath + "/../../../../Helper" as NSString).standardizingPath
     }
 
     enum HelperError: LocalizedError {

@@ -23,7 +23,7 @@ Free, local-only, push-to-talk speech-to-text for macOS. Zero cloud. Zero cost. 
 ## Setup
 
 ```bash
-git clone <repo-url> && cd mywhisper
+git clone <repo-url> && cd zero-whisper
 ./Scripts/setup.sh
 ```
 
