@@ -56,7 +56,7 @@ echo "Python dependencies installed."
 echo ""
 echo "=== Downloading ML models (first time only) ==="
 
-"$VENV_DIR/bin/python" -c "
+PYTHONPATH="$HELPER_DIR" "$VENV_DIR/bin/python" -c "
 from stt import _MODEL_NAME
 from parakeet_mlx import from_pretrained
 print(f'Downloading Parakeet STT model ({_MODEL_NAME})...')
@@ -64,7 +64,7 @@ from_pretrained(_MODEL_NAME)
 print('Parakeet model ready.')
 " || echo "WARNING: Parakeet model download failed (will retry on first use)"
 
-"$VENV_DIR/bin/python" -c "
+PYTHONPATH="$HELPER_DIR" "$VENV_DIR/bin/python" -c "
 from rewrite import _MODEL_NAME
 from mlx_lm import load
 print(f'Downloading Qwen rewrite model ({_MODEL_NAME})...')
