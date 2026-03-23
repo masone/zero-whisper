@@ -85,6 +85,9 @@ def _parakeet_transcribe(wav_path: str) -> str:
 
     # Load WAV with stdlib, convert to MLX array
     audio_np = _load_wav(wav_path)
+    min_samples = _SAMPLE_RATE // 2  # 0.5s minimum
+    if len(audio_np) < min_samples:
+        return ""
     audio_mx = mx.array(audio_np)
 
     # Convert to mel spectrogram
