@@ -47,20 +47,32 @@ class HelperClient {
     }
 
     func transcribe(wavURL: URL, mode: Mode) async throws -> HelperResult {
-        // If server isn't up, try to start it and wait
+        // If server isn't up, try to start it
         if !(await isServerHealthy()) {
             launchServer()
-            // Wait up to 60s
-            var ready = false
-            for _ in 0..<120 {
+            // Wait for server to start listening (up to 30s)
+            var listening = false
+            for _ in 0..<60 {
                 try? await Task.sleep(nanoseconds: 500_000_000)
                 if await isServerHealthy() {
-                    ready = true
+                    listening = true
                     break
                 }
             }
-            if !ready {
+            if !listening {
                 throw HelperError.serverNotRunning
+            }
+        }
+
+        // Wait for models to finish loading (up to 5 min for first-time download)
+        if !(await isServerReady()) {
+            print("[HelperClient] Waiting for model to load...")
+            for _ in 0..<600 {
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                if await isServerReady() { break }
+            }
+            if !(await isServerReady()) {
+                throw HelperError.helperError("Model loading timed out")
             }
         }
 
@@ -78,6 +90,20 @@ class HelperClient {
             guard let http = response as? HTTPURLResponse, http.statusCode == 200 else { return false }
             let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
             return json?["ok"] as? Bool == true
+        } catch {
+            return false
+        }
+    }
+
+    private func isServerReady() async -> Bool {
+        let url = serverURL.appendingPathComponent("health")
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 2
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else { return false }
+            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            return json?["status"] as? String == "ready"
         } catch {
             return false
         }
