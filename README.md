@@ -18,7 +18,7 @@ Free, local-only, push-to-talk speech-to-text for macOS. Zero cloud. Zero cost. 
 - macOS 13+ (Ventura or later)
 - Apple Silicon Mac (M1/M2/M3/M4)
 - Xcode (for building)
-- Python 3.10+
+- Python 3.10+ with pip
 
 ## Setup
 
@@ -27,7 +27,7 @@ git clone <repo-url> && cd zero-whisper
 ./Scripts/setup.sh
 ```
 
-That's it. Builds the app, installs Python dependencies, and outputs `build/ZeroWhisper.app`.
+That's it. Installs Python dependencies, downloads ML models (~4GB), builds the app, and outputs `build/ZeroWhisper.app`.
 
 Then:
 ```bash
@@ -39,7 +39,7 @@ Or copy to Applications:
 cp -r build/ZeroWhisper.app /Applications/
 ```
 
-On first launch, grant **Microphone** (prompted automatically) and **Accessibility** (System Settings > Privacy & Security > Accessibility > toggle ZeroWhisper on). Models download on first use (~4GB, one time).
+On first launch, grant **Microphone** (prompted automatically) and **Accessibility** (System Settings > Privacy & Security > Accessibility > toggle ZeroWhisper on).
 
 ## Usage
 
@@ -70,5 +70,5 @@ Swift app (menubar)          HTTP            Python server (localhost:8426)
 
 - **Hotkey not working**: Check Accessibility permission in System Settings
 - **No audio**: Check Microphone permission
-- **Slow first use**: Models are downloading. Subsequent uses are fast.
-- **Helper not starting**: Run `./Scripts/setup.sh` first
+- **Slow first use**: Models are loading into memory. Subsequent uses are fast.
+- **Helper not starting**: Run `./Scripts/setup.sh` to rebuild
