@@ -13,14 +13,13 @@ class HelperClient {
     private let serverURL: URL
     private var serverProcess: Process?
 
-    private var pythonPath: String = ""
+    private var helperDirectory: String = ""
     private var serverScriptPath: String = ""
 
     init() {
         serverURL = URL(string: "http://127.0.0.1:\(serverPort)")!
-        let projectHelper = findHelperDirectory()
-        pythonPath = projectHelper + "/venv/bin/python3"
-        serverScriptPath = projectHelper + "/server.py"
+        helperDirectory = findHelperDirectory()
+        serverScriptPath = helperDirectory + "/server.py"
     }
 
     /// Start the helper server and wait until it's ready.
@@ -126,25 +125,28 @@ class HelperClient {
         // Don't launch again if we already have a running process
         if let existing = serverProcess, existing.isRunning { return }
 
-        guard FileManager.default.fileExists(atPath: pythonPath) else {
-            print("[HelperClient] Python venv not found at \(pythonPath). Run setup.sh first.")
-            return
-        }
-
         guard FileManager.default.fileExists(atPath: serverScriptPath) else {
             print("[HelperClient] server.py not found at \(serverScriptPath)")
             return
         }
 
+        guard let pythonPath = findSystemPython() else {
+            print("[HelperClient] python3 not found. Install Python 3 or Xcode Command Line Tools.")
+            return
+        }
+
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: pythonPath)
-        process.arguments = [serverScriptPath]
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = [pythonPath, serverScriptPath]
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle(forWritingAtPath: "/dev/stderr") ?? FileHandle.nullDevice
 
         var env = ProcessInfo.processInfo.environment
         env["PYTHONUNBUFFERED"] = "1"
         env["HF_HUB_OFFLINE"] = "1"  // models are cached from setup, no network needed
+        // Point Python at bundled packages — no venv symlinks needed
+        let sitePackages = findSitePackages()
+        env["PYTHONPATH"] = ([helperDirectory] + sitePackages).joined(separator: ":")
         process.environment = env
 
         do {
@@ -162,6 +164,26 @@ class HelperClient {
     }
 
     // MARK: - Paths
+
+    private func findSystemPython() -> String? {
+        let candidates = ["/usr/bin/python3", "/usr/local/bin/python3", "/opt/homebrew/bin/python3"]
+        for path in candidates {
+            if FileManager.default.fileExists(atPath: path) {
+                return path
+            }
+        }
+        return nil
+    }
+
+    private func findSitePackages() -> [String] {
+        let venvLib = helperDirectory + "/venv/lib"
+        guard let contents = try? FileManager.default.contentsOfDirectory(atPath: venvLib) else { return [] }
+        // Find python*/site-packages inside the venv
+        return contents
+            .filter { $0.hasPrefix("python") }
+            .map { venvLib + "/" + $0 + "/site-packages" }
+            .filter { FileManager.default.fileExists(atPath: $0) }
+    }
 
     private func findHelperDirectory() -> String {
         // Helper is bundled inside the .app at Contents/Resources/Helper
