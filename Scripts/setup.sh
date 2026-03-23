@@ -29,6 +29,13 @@ if [ -z "$PYTHON" ]; then
 fi
 echo "Python:  $($PYTHON --version 2>&1)"
 
+# pip (may be pip3 on some systems)
+if ! $PYTHON -m pip --version &>/dev/null; then
+    echo "ERROR: pip not found. Install it with: $PYTHON -m ensurepip --upgrade"
+    echo "       or: brew install python3"
+    exit 1
+fi
+
 # Swift
 if ! command -v swift &>/dev/null; then
     echo "ERROR: swift not found. Install Xcode or Command Line Tools."
@@ -88,6 +95,10 @@ cp "$BUILD_DIR/arm64-apple-macosx/release/ZeroWhisper" "$APP_DIR/Contents/MacOS/
 cp "$SWIFT_DIR/ZeroWhisper/Info.plist" "$APP_DIR/Contents/"
 cp "$SWIFT_DIR/ZeroWhisper/AppIcon.icns" "$APP_DIR/Contents/Resources/" 2>/dev/null || true
 
+# Bundle Helper (Python server + venv) inside the app
+echo "Bundling Helper into app..."
+cp -R "$HELPER_DIR" "$APP_DIR/Contents/Resources/Helper"
+
 echo "Built: $APP_DIR"
 
 # --- Done ---
@@ -101,8 +112,8 @@ echo ""
 echo "Or copy to Applications:"
 echo "  cp -r $APP_DIR /Applications/"
 echo ""
-echo "First launch will:"
-echo "  - Ask for Microphone permission"
-echo "  - Prompt for Accessibility permission (must enable manually)"
+echo "First launch will ask for:"
+echo "  - Microphone permission"
+echo "  - Accessibility permission (must enable manually in System Settings)"
 echo ""
 echo "Hold Right Option (⌥) to dictate. Add Shift for polish mode."

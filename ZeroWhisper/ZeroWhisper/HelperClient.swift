@@ -163,19 +163,16 @@ class HelperClient {
     // MARK: - Paths
 
     private func findHelperDirectory() -> String {
-        let candidates = [
-            Bundle.main.bundlePath + "/../../../../Helper",
-            Bundle.main.executablePath.map { URL(fileURLWithPath: $0).deletingLastPathComponent().path + "/../../../../Helper" } ?? ""
-        ]
-
-        for candidate in candidates {
-            let resolved = (candidate as NSString).standardizingPath
-            if FileManager.default.fileExists(atPath: resolved + "/server.py") {
-                return resolved
+        // Helper is bundled inside the .app at Contents/Resources/Helper
+        if let resourcePath = Bundle.main.resourcePath {
+            let bundled = resourcePath + "/Helper"
+            if FileManager.default.fileExists(atPath: bundled + "/server.py") {
+                return bundled
             }
         }
-
-        return (Bundle.main.bundlePath + "/../../../../Helper" as NSString).standardizingPath
+        // Fallback: adjacent to the project (development)
+        let devPath = (Bundle.main.bundlePath + "/../../../../Helper" as NSString).standardizingPath
+        return devPath
     }
 
     enum HelperError: LocalizedError {
