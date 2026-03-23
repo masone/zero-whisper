@@ -51,6 +51,25 @@ source "$VENV_DIR/bin/activate"
 "$VENV_DIR/bin/python" -m pip install -r "$HELPER_DIR/requirements.txt"
 echo "Python dependencies installed."
 
+# --- Download ML models ---
+
+echo ""
+echo "=== Downloading ML models (first time only) ==="
+
+"$VENV_DIR/bin/python" -c "
+from parakeet_mlx import from_pretrained
+print('Downloading Parakeet STT model...')
+from_pretrained('mlx-community/parakeet-tdt-0.6b-v3')
+print('Parakeet model ready.')
+"
+
+"$VENV_DIR/bin/python" -c "
+from mlx_lm import load
+print('Downloading Qwen rewrite model...')
+load('Qwen/Qwen2.5-1.5B-Instruct')
+print('Qwen model ready.')
+"
+
 # --- Build Swift app ---
 
 echo ""
@@ -83,6 +102,5 @@ echo ""
 echo "First launch will:"
 echo "  - Ask for Microphone permission"
 echo "  - Prompt for Accessibility permission (must enable manually)"
-echo "  - Download ML models (~4GB, one time only)"
 echo ""
 echo "Hold Right Option (⌥) to dictate. Add Shift for polish mode."
