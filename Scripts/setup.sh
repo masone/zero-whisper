@@ -47,8 +47,8 @@ if [ ! -d "$VENV_DIR" ]; then
 fi
 
 source "$VENV_DIR/bin/activate"
-$PYTHON -m pip install --upgrade pip -q
-$PYTHON -m pip install -r "$HELPER_DIR/requirements.txt"
+"$VENV_DIR/bin/python" -m pip install --upgrade pip -q
+"$VENV_DIR/bin/python" -m pip install -r "$HELPER_DIR/requirements.txt"
 echo "Python dependencies installed."
 
 # --- Build Swift app ---
