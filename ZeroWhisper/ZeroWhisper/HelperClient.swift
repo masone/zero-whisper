@@ -138,7 +138,7 @@ class HelperClient {
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: pythonPath)
-        process.arguments = [serverScriptPath, "--preload"]
+        process.arguments = [serverScriptPath]
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle(forWritingAtPath: "/dev/stderr") ?? FileHandle.nullDevice
 
