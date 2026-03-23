@@ -51,6 +51,27 @@ source "$VENV_DIR/bin/activate"
 "$VENV_DIR/bin/python" -m pip install -r "$HELPER_DIR/requirements.txt"
 echo "Python dependencies installed."
 
+# --- Download ML models ---
+
+echo ""
+echo "=== Downloading ML models (first time only) ==="
+
+PYTHONPATH="$HELPER_DIR" "$VENV_DIR/bin/python" -c "
+from stt import _MODEL_NAME
+from parakeet_mlx import from_pretrained
+print(f'Downloading Parakeet STT model ({_MODEL_NAME})...')
+from_pretrained(_MODEL_NAME)
+print('Parakeet model ready.')
+" || echo "WARNING: Parakeet model download failed (will retry on first use)"
+
+PYTHONPATH="$HELPER_DIR" "$VENV_DIR/bin/python" -c "
+from rewrite import _MODEL_NAME
+from mlx_lm import load
+print(f'Downloading Qwen rewrite model ({_MODEL_NAME})...')
+load(_MODEL_NAME)
+print('Qwen model ready.')
+" || echo "WARNING: Qwen model download failed (will retry on first use)"
+
 # --- Build Swift app ---
 
 echo ""
@@ -83,6 +104,5 @@ echo ""
 echo "First launch will:"
 echo "  - Ask for Microphone permission"
 echo "  - Prompt for Accessibility permission (must enable manually)"
-echo "  - Download ML models (~4GB, one time only)"
 echo ""
 echo "Hold Right Option (⌥) to dictate. Add Shift for polish mode."
