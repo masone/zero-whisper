@@ -15,7 +15,6 @@ import argparse
 import json
 import sys
 import os
-import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # Add parent dir so stt/rewrite imports work
@@ -23,19 +22,13 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 DEFAULT_PORT = 8426
 
-_server_ready = threading.Event()
-_server_ready.set()  # Ready by default; cleared when preloading
-
 
 class HelperHandler(BaseHTTPRequestHandler):
     """Handle transcription requests."""
 
     def do_GET(self):
         if self.path == "/health":
-            if _server_ready.is_set():
-                self._json_response({"ok": True, "status": "ready"})
-            else:
-                self._json_response({"ok": True, "status": "loading"})
+            self._json_response({"ok": True, "status": "ready"})
         else:
             self._json_response({"ok": False, "error": "not found"}, code=404)
 
@@ -115,8 +108,6 @@ def preload_models():
                 print("[helper] Parakeet model loaded.", file=sys.stderr)
     except ImportError:
         print("[helper] parakeet-mlx not available, will use stub.", file=sys.stderr)
-    finally:
-        _server_ready.set()
 
 
 def main():
@@ -127,8 +118,7 @@ def main():
     args = parser.parse_args()
 
     if args.preload:
-        _server_ready.clear()
-        threading.Thread(target=preload_models, daemon=True).start()
+        preload_models()
 
     server = HTTPServer(("127.0.0.1", args.port), HelperHandler)
     print(f"[helper] Listening on http://127.0.0.1:{args.port}", file=sys.stderr)
