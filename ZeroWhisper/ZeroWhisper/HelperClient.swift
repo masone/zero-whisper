@@ -144,6 +144,7 @@ class HelperClient {
 
         var env = ProcessInfo.processInfo.environment
         env["PYTHONUNBUFFERED"] = "1"
+        env["HF_HUB_OFFLINE"] = "1"  // models are cached from setup, no network needed
         process.environment = env
 
         do {
