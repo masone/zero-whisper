@@ -3,6 +3,7 @@ Text rewriting/polishing using a local Qwen model via mlx-lm.
 Falls back to a stub for testing if mlx-lm is not installed.
 """
 
+import gc
 import os
 import sys
 
@@ -42,6 +43,7 @@ def polish(text: str) -> str:
 
 def _mlx_polish(text: str) -> str:
     """Polish using mlx-lm with a local Qwen model."""
+    import mlx.core as mx
     from mlx_lm import load, generate
 
     if "model" not in _model_cache:
@@ -52,24 +54,29 @@ def _mlx_polish(text: str) -> str:
         model = _model_cache["model"]
         tokenizer = _model_cache["tokenizer"]
 
-    # Build chat messages
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": text},
-    ]
+    try:
+        # Build chat messages
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": text},
+        ]
 
-    prompt = tokenizer.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
-    )
+        prompt = tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
 
-    response = generate(
-        model,
-        tokenizer,
-        prompt=prompt,
-        max_tokens=len(text.split()) * 3 + 50,  # reasonable limit
-    )
+        response = generate(
+            model,
+            tokenizer,
+            prompt=prompt,
+            max_tokens=len(text.split()) * 3 + 50,  # reasonable limit
+        )
 
-    return response.strip()
+        return response.strip()
+    finally:
+        gc.collect()
+        if hasattr(mx, "metal"):
+            mx.metal.clear_cache()
 
 
 def _stub_polish(text: str) -> str:

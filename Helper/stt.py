@@ -5,6 +5,7 @@ Falls back to a stub for testing if parakeet-mlx is not installed.
 Loads WAV files with Python's built-in wave module — no ffmpeg required.
 """
 
+import gc
 import os
 import sys
 import wave
@@ -83,27 +84,32 @@ def _parakeet_transcribe(wav_path: str) -> str:
 
     model = _model_cache["model"]
 
-    # Load WAV with stdlib, convert to MLX array
-    audio_np = _load_wav(wav_path)
-    min_samples = _SAMPLE_RATE // 2  # 0.5s minimum
-    if len(audio_np) < min_samples:
+    try:
+        # Load WAV with stdlib, convert to MLX array
+        audio_np = _load_wav(wav_path)
+        min_samples = _SAMPLE_RATE // 2  # 0.5s minimum
+        if len(audio_np) < min_samples:
+            return ""
+        audio_mx = mx.array(audio_np)
+
+        # Convert to mel spectrogram
+        mel = get_logmel(audio_mx, model.preprocessor_config)
+
+        # Run inference via generate() — bypasses ffmpeg-based transcribe()
+        results = model.generate(mel)
+
+        # generate() returns a list of AlignedResult
+        if results and len(results) > 0:
+            result = results[0]
+            if hasattr(result, "text"):
+                return result.text.strip()
+            return str(result).strip()
+
         return ""
-    audio_mx = mx.array(audio_np)
-
-    # Convert to mel spectrogram
-    mel = get_logmel(audio_mx, model.preprocessor_config)
-
-    # Run inference via generate() — bypasses ffmpeg-based transcribe()
-    results = model.generate(mel)
-
-    # generate() returns a list of AlignedResult
-    if results and len(results) > 0:
-        result = results[0]
-        if hasattr(result, "text"):
-            return result.text.strip()
-        return str(result).strip()
-
-    return ""
+    finally:
+        gc.collect()
+        if hasattr(mx, "metal"):
+            mx.metal.clear_cache()
 
 
 def _stub_transcribe(wav_path: str) -> str:
